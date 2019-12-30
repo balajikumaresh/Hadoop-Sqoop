@@ -1,0 +1,56 @@
+sqoop import \
+  --connect "jdbc:mysql://hiveserver:3306/retail_db" \
+  --username=retail_dba \
+  --password=itversity \
+  --table departments \
+  --as-textfile \
+  --target-dir=/user/root/departments
+  
+sqoop eval \
+  --connect "jdbc:mysql://sandbox.hortonworks.com:3306/retail_db" \
+  --username retail_dba \
+  --password hadoop \
+  --query "select count(1) from order_items"
+
+-- Reference: http://www.hadoop.com/content/hadoop/en/developers/home/developer-admin-resources/get-started-with-hadoop-tutorial/exercise-1.html
+
+sqoop import-all-tables \
+  --connect "jdbc:mysql://cdh54itversity-mn0.southeastasia.cloudapp.azure.com:3306/retail_db" \
+  --username retail_dba \
+  --password itversity \
+  --warehouse-dir /user/itversity/dgadiraju/import-all-tables \
+  --driver com.mysql.jdbc.Driver
+
+sqoop import-all-tables \
+  -m 12 \
+  --connect "jdbc:mysql://sandbox.hortonworks.com:3306/retail_db" \
+  --username=retail_dba \
+  --password=hadoop \
+  --as-avrodatafile \
+  --warehouse-dir=/apps/hive/warehouse/retail_stage.db
+
+--Default
+sqoop import \
+  --connect "jdbc:mysql://sandbox.hortonworks.com:3306/retail_db" \
+  --username=retail_dba \
+  --password=hadoop \
+  --table departments \
+  --as-textfile \
+  --target-dir=/user/root/departments
+
+sqoop import \
+  --connect "jdbc:mysql://sandbox.hortonworks.com:3306/retail_db" \
+  --username=retail_dba \
+  --password=hadoop \
+  --table departments \
+  --as-sequencefile \
+  --target-dir=/user/root/departments
+
+sqoop import \
+  --connect "jdbc:mysql://sandbox.hortonworks.com:3306/retail_db" \
+  --username=retail_dba \
+  --password=hadoop \
+  --table departments \
+  --as-avrodatafile \
+  --target-dir=/user/root/departments
+
