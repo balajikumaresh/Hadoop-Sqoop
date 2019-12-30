@@ -1,0 +1,18 @@
+CREATE EXTERNAL TABLE departments
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe'
+STORED AS INPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat'
+LOCATION 'hdfs:///user/root/departments'
+TBLPROPERTIES ('avro.schema.url'='hdfs://sandbox.hortonworks.com/user/root/sqoop_import_departments.avsc');
+
+sqoop import-all-tables \
+  --num-mappers 1 \
+  --connect "jdbc:mysql://sandbox.hortonworks.com:3306/retail_db" \
+  --username=retail_dba \
+  --password=hadoop \
+  --hive-import \
+  --hive-overwrite \
+  --create-hive-table \
+  --compress \
+  --compression-codec org.apache.hadoop.io.compress.SnappyCodec \
+  --outdir java_files
